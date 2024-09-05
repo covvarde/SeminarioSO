@@ -36,7 +36,7 @@ def read_and_process_file(input_filename, output_filename, batch_size=100):
 
     try:
         # Abrir el archivo de entrada por lotes en modo lectura
-        with open(input_filename, 'r') as infile:
+        with open(input_filename, 'r', encoding='utf-8') as infile:
             batch = []
             
             for line in infile:
@@ -54,7 +54,7 @@ def read_and_process_file(input_filename, output_filename, batch_size=100):
                 processed_lines.extend([process_line(l) for l in batch if process_line(l) is not None])
         
         # Escribir todos los resultados en el archivo de salida final
-        with open(output_filename, 'w') as outfile:
+        with open(output_filename, 'w', encoding='utf-8') as outfile:
             for pline in processed_lines:
                 outfile.write(pline)
     
