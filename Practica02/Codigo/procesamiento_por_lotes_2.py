@@ -1,49 +1,53 @@
 import os
-import schedule
 import time
+import schedule
 
-def obtener_archivos_malignos(directorio, extension_maligna):
+
+def get_evil_files(directory, evil_extension):
     """
     Recorre el directorio y sus subcarpetas para encontrar archivos con la extensión maligna.
     Devuelve una lista de rutas de archivos malignos.
     """
-    archivos_malignos = []
-    for carpeta_raiz, subcarpetas, archivos in os.walk(directorio):
-        for archivo in archivos:
-            if archivo.endswith(extension_maligna):
-                ruta_archivo = os.path.join(carpeta_raiz, archivo)
-                archivos_malignos.append(ruta_archivo)
-    return archivos_malignos
+    evil_files = []
+    for root_dir, sub_dir, files in os.walk(directory):
+        for file in files:
+            if file.endswith(evil_extension):
+                file_dir = os.path.join(root_dir, file)
+                evil_files.append(file_dir)
+    return evil_files
 
-def eliminar_archivos_lote(archivos_malignos):
+def delete_files(evil_files):
     """
-    Elimina los archivos listados en archivos_malignos.
+    Elimina los archivos listados en evil_files.
     """
-    for archivo in archivos_malignos:
+    for file in evil_files:
         try:
-            os.remove(archivo)
-            print(f"Archivo eliminado: {archivo}")
+            os.remove(file)
+            print(f"Archivo eliminado: {file}")
         except Exception as e:
-            print(f"No se pudo eliminar {archivo}: {e}")
+            print(f"No se pudo eliminar {file}: {e}")
 
-def tarea_programada():
+def scheduled_task():
     """
     Función que se ejecuta periódicamente para buscar y eliminar archivos malignos.
     """
-    directorio = "ruta/de/tu/carpeta"  # Cambia esto a la ruta de tu carpeta
-    extension_maligna = ".maligno"  # Cambia esto a la extensión que desees identificar como maligna
-    archivos_malignos = obtener_archivos_malignos(directorio, extension_maligna)
-    if archivos_malignos:
-        eliminar_archivos_lote(archivos_malignos)
+    directory = "D:/test"
+    evil_extension = ".pdf"
+    evil_files = get_evil_files(directory, evil_extension)
+    if evil_files:
+        delete_files(evil_files)
     else:
         print("No se encontraron archivos malignos en este lote.")
 
-# Programar la tarea para que se ejecute cada minuto
-schedule.every(1).minute.do(tarea_programada)
+# Función principal
+if __name__ == "__main__":
+    # Programar la tarea para que se ejecute cada minuto
+    schedule.every(30).seconds.do(scheduled_task)
 
-print("Iniciando el programa. Presiona Ctrl+C para detenerlo.")
-while True:
-    # Ejecuta las tareas programadas pendientes
-    schedule.run_pending()
-    # Pausa el bucle por 1 segundo para reducir el uso de CPU
-    time.sleep(1)
+    print("Iniciando el programa. Presiona Ctrl+C para detenerlo.")
+
+    while True:
+        # Ejecuta las tareas programadas pendientes
+        schedule.run_pending()
+        # Pausa el bucle por 1 segundo para reducir el uso de CPU
+        time.sleep(1)
