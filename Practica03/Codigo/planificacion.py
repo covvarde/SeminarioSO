@@ -1,36 +1,71 @@
 def fifo_scheduling(processes):
   """
-  Agrega cada proceso a una lista usando FIFO, inclyendo el tiempo de inicio y finalizacion
+  Ejecuta cada proceso sin ordenar la lista, mostrando el tiempo de inicio y finalización
   """
   current_time = 0
-  schedule = []
+  
   for process in processes:
     start_time = current_time
     end_time = current_time + process[1]
-    schedule.append((process[0], start_time, end_time))
+    print(f"{process[0]}\t| Inicio: {start_time}s | Fin: {end_time}s")
     current_time = end_time
-  return schedule
 
 
 def sjf_scheduling(processes):
   """
-  Agrega cada proceso a una lista, ordenada según su duración, incluyendo el tiempo de inicio y finalizació 
+  Ordena la lista de procesos según su duración, y los ejecuta mostrando el tiempo de inicio y finalización 
   """
   current_time = 0
-  schedule = []
   # Ordena la lista de acuerdo a la duración del proceso
   processes_sorted = sorted(processes, key=lambda x: x[1])
+  
   for process in processes_sorted:
     start_time = current_time
     end_time = current_time + process[1]
-    schedule.append((process[0], start_time, end_time))
+    print(f"{process[0]}\t| Inicio: {start_time}s | Fin: {end_time}s")
     current_time = end_time
-  return schedule
 
+
+def priority_scheduling(processes):
+  """
+  Ordena la lista de procesos según su prioridad, y los ejecuta mostrando el tiempo de inicio y finalización 
+  """
+  current_time = 0
+  processes_sorted = sorted(processes, key=lambda x: x[2])
+  
+  for process in processes_sorted:
+    start_time = current_time
+    end_time = current_time + process[1]
+    print(f"{process[0]}\t| Inicio: {start_time}s | Fin: {end_time}s | Prioridad: {process[2]}")
+    current_time = end_time
+
+
+def round_robin(processes, quantum):
+  """
+  Ejecuta cada proceso únicamente durante el tiempo indicado, hasta finalizarlos. 
+  La lista no se ordena antes de procesarse.
+  """
+  current_time = 0
+  ready_queue = processes.copy()
+
+  while ready_queue:
+    process = ready_queue.pop(0)
+    name, duration, _ = process
+    if duration <= quantum:
+      start_time = current_time
+      end_time = current_time + duration
+      print(f"{process[0]}\t| Inicio: {start_time}s | Fin: {end_time}s")
+      current_time = end_time
+    else:
+      start_time = current_time
+      end_time = current_time + quantum
+      print(f"{process[0]}\t| Inicio: {start_time}s | Fin: {end_time}s")
+      current_time = end_time
+      ready_queue.append((name, duration - quantum, _))
 
 def main():
   """
-  Lee los procesos del archivo inicial y los procesa
+  Lee los procesos del archivo inicial y ejecuta cada algoritmo.
   """
   processes = []
   with open("/procesos.txt", "r") as f:
@@ -40,12 +75,16 @@ def main():
       processes.append((parts[0], int(parts[1]), int(parts[2])))
 
   print("Planificación FIFO:")
-  for process in fifo_scheduling(processes):
-    print(f"{process[0]}: Inicio = {process[1]}s, Fin = {process[2]}s")
+  fifo_scheduling(processes)
 
   print("\nPlanificación SJF:")
-  for process in sjf_scheduling(processes):
-    print(f"{process[0]}: Inicio = {process[1]}s, Fin = {process[2]}s")
+  sjf_scheduling(processes)
+
+  print("\nPlanificación por prioridades:")
+  priority_scheduling(processes)
+
+  print("\nPlanificación Round Robin:")
+  round_robin(processes, 3)
 
 
 if __name__ == "__main__":
