@@ -63,6 +63,24 @@ def round_robin(processes, quantum):
       current_time = end_time
       ready_queue.append((name, duration - quantum, _))
 
+def add_process(processes):
+  """
+  Recibe un nuevo proceso por consola y lo agrega a la lista.
+  """
+  name = input("\nNombre del proceso: ")
+  duration = int(input("Duración del proceso: "))
+  priority = int(input("Prioridad del proceso: "))
+
+  new_process = (name, duration, priority)
+
+  position = input("Agregar al inicio o al final de la lista? (I/F): ")
+  if position.lower() == "i":
+    processes.insert(0, new_process)  # Agrega al inicio
+  else:
+    processes.append(new_process)  # Agrega al final
+  
+  return processes
+
 def main():
   """
   Lee los procesos del archivo inicial y ejecuta cada algoritmo.
@@ -74,18 +92,37 @@ def main():
       parts = line.strip().split(", ")
       processes.append((parts[0], int(parts[1]), int(parts[2])))
 
-  print("Planificación FIFO:")
-  fifo_scheduling(processes)
+  while True:
+    print("\nMenú:")
+    print("1. Agregar proceso")
+    print("2. Planificación FIFO")
+    print("3. Planificación SJF")
+    print("4. Planificación por prioridades")
+    print("5. Planificación Round Robin")
+    print("6. Salir")
 
-  print("\nPlanificación SJF:")
-  sjf_scheduling(processes)
+    option = input("Seleccione una opción: ")
 
-  print("\nPlanificación por prioridades:")
-  priority_scheduling(processes)
-
-  print("\nPlanificación Round Robin:")
-  round_robin(processes, 3)
+    if option == "1":
+      processes = add_process(processes)
+    elif option == "2":
+      print("\nPlanificación FIFO:")
+      fifo_scheduling(processes)
+    elif option == "3":
+      print("\nPlanificación SJF:")
+      sjf_scheduling(processes)
+    elif option == "4":
+      print("\nPlanificación por prioridades:")
+      priority_scheduling(processes)
+    elif option == "5":
+      print("\nPlanificación Round Robin:")
+      round_robin(processes, 3)
+    elif option == "6":
+      break
+    else:  
+      print("Opción no válida. Intenta de nuevo.")
 
 
 if __name__ == "__main__":
   main()
+  
