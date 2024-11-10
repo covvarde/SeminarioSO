@@ -7,8 +7,8 @@ ventana.title("Movimiento de Imágenes")
 ventana.geometry("600x400")  # Tamaño de la ventana
 
 # Cargar las imágenes
-imagen1 = Image.open("/Users/alejandro/Documents/Alejandro/sso/imagen1.png")
-imagen2 = Image.open("/Users/alejandro/Documents/Alejandro/sso/imagen2.png")
+imagen1 = Image.open("Hilos/imagen1.png")
+imagen2 = Image.open("Hilos/imagen2.png")
 
 # Redimensionar imágenes si es necesario
 imagen1 = imagen1.resize((100, 100))
@@ -31,7 +31,7 @@ dy = 2  # Velocidad de movimiento en y para la segunda imagen
 
 # Función para mover las imágenes
 def mover_imagenes():
-    global dx, dy  # Declaración global al inicio de la función
+    global dx, dy 
 
     # Obtener posiciones actuales
     x1, y1 = etiqueta_imagen1.winfo_x(), etiqueta_imagen1.winfo_y()
